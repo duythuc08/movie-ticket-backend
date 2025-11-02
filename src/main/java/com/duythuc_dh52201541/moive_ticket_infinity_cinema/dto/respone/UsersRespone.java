@@ -1,27 +1,23 @@
-package com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity;
+package com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.UserStatus;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 
-@Entity
-@Table(name="users")
 @Data // Lombok: sinh getter, setter, toString, equals, hashCode
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
-public class Users {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String userId;
+@JsonInclude(JsonInclude.Include.NON_NULL) // Bỏ qua field null khi trả về JSON
+public class UsersRespone {
 
-    @Column(unique = true)
     String username; //su dung email
     String password;
     String firstname;
@@ -29,23 +25,9 @@ public class Users {
     String phoneNumber;
     LocalDate birthday;
 
-    @OneToMany(mappedBy = "users")
-    Set<UserPromotion> userPromotions;
-
-    @ManyToMany
-    Set<Role> role;
-
     @Enumerated(EnumType.STRING)
     UserStatus userStatus;
 
-    boolean enabled = false; //verify email
-    LocalDateTime createdAt = LocalDateTime.now(); //thời gian khơ tạo
-
-    @PrePersist
-    public void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-    }
+    Set<RoleRespone> roles;
+    boolean enabled;
 }
-

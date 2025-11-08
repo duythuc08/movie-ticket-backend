@@ -29,7 +29,6 @@ public class SecurityConfig {
 
     // Các endpoint public (không cần authentication)
     private final String[] PUBLIC_ENDPOINTS = {
-            "/users",
             "/auth/login",
             "/auth/introspect",
             "/auth/logout",
@@ -37,6 +36,9 @@ public class SecurityConfig {
             "/auth/register",
             "/auth/verify",
             "/auth/resendOTP"
+    };
+    private final String[] ADMIN_ENDPOINTS = {
+            "/users"
     };
 
 
@@ -48,6 +50,7 @@ public class SecurityConfig {
                 request
                         // Cho phép truy cập mà không cần login với các endpoint trong PUBLIC_ENDPOINTS
                         .requestMatchers( PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(ADMIN_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         // Các request khác bắt buộc phải xác thực
                         .anyRequest()
                         .authenticated()
@@ -80,7 +83,7 @@ public class SecurityConfig {
         // Đặt prefix cho authority. Mặc định Spring thêm "SCOPE_" vào claim scope trong JWT
         // Ở đây đổi lại thành "ROLE_", ví dụ:
         // scope = "ADMIN USER"  -> authorities = ["ROLE_ADMIN", "ROLE_USER"]
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
         // Tạo converter chính cho JwtAuthenticationToken
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

@@ -3,6 +3,8 @@ package com.duythuc_dh52201541.moive_ticket_infinity_cinema.controller;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.UserUpdateRequest;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.UsersCreationRequest;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.ApiResponse;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.UserClientRespone;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.UserMenuRespone;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.UsersRespone;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Users;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.service.UserService;
@@ -45,9 +47,15 @@ public class UserController {
     }
 
     @GetMapping("/myInfo")
-    ApiResponse<UsersRespone> getMyInfo(){
-        return ApiResponse.<UsersRespone>builder()
+    ApiResponse<UserClientRespone> getMyInfo(){
+        return ApiResponse.<UserClientRespone>builder()
                 .result(userService.getMyInfo())
+                .build();
+    }
+    @GetMapping("/myMenu")
+    ApiResponse<UserMenuRespone> getUserMenu(){
+        return ApiResponse.<UserMenuRespone>builder()
+                .result(userService.getUserMenu())
                 .build();
     }
 
@@ -61,6 +69,7 @@ public class UserController {
                 .result(userService.updateUser(userId, request)) //Vai trò: DTO để server trả dữ liệu user về cho client sau khi update.
                 .build();
     }
+
 
     @DeleteMapping("{userId}")
     ApiResponse<String> deleteUser(@PathVariable String userId){

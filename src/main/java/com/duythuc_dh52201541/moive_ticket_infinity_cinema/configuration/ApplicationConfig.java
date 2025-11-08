@@ -2,6 +2,7 @@ package com.duythuc_dh52201541.moive_ticket_infinity_cinema.configuration;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Users;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Role;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.Roles;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.repository.RoleRepository;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.repository.UserRepository;
 import lombok.AccessLevel;
@@ -30,13 +31,13 @@ public class ApplicationConfig {
             if (userRepository.findByUsername("admin@gmail.com").isEmpty()){
 
                 roleRepository.save(Role.builder()
-                        .name("User")
-                        .description("User role")
+                        .name(Roles.USER.name())
+                        .description("User_role")
                         .build());
 
                 Role adminRole = roleRepository.save(Role.builder()
-                        .name("Admin")
-                        .description("Admin role")
+                        .name(Roles.ADMIN.name())
+                        .description("Admin_role")
                         .build());
                 var roles = new HashSet<Role>();
                 roles.add(adminRole);

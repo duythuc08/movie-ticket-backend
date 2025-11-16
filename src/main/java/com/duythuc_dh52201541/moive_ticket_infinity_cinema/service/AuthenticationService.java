@@ -4,8 +4,8 @@ import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.Authentic
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.IntrospectResquest;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.LogoutResquest;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.RegisterRequest;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.AuthenticationRespone;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.IntrospectRespone;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.AuthenticationResponse;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.IntrospectResponse;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.UsersRespone;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.InvalidatedToken;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Role;
@@ -32,6 +32,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,13 +54,14 @@ public class AuthenticationService {
     InvalidatedTokenRepository  invalidatedTokenRepository;
     private final UserMapper userMapper;
     private final VerificationTokenRepository verificationTokenRepository;
-    private final EmailService emailService;
+    private final @Lazy EmailService emailService;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
     @NonFinal
     @Value("${jwt.signerKey}") //doc bien tu file .yaml
     protected String SIGNER_KEY;
 
-    public AuthenticationRespone authenticate(AuthenticationResquest resquest) {
+    public AuthenticationResponse authenticate(AuthenticationResquest resquest) {
         var user = userRepository.findByUsername(resquest.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -69,7 +71,7 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
 
-        return AuthenticationRespone.builder()
+        return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
                 .build();
@@ -133,7 +135,7 @@ public class AuthenticationService {
         VerificationToken token = new VerificationToken();
         token.setUser(user);
         token.setVerificationCode(otp);
-        token.setVerificationCodeExpiresAt(LocalDateTime.now().plusSeconds(30));
+        token.setVerificationCodeExpiresAt(LocalDateTime.now().plusSeconds(60));
         verificationTokenRepository.save(token);
 
         //Send mail
@@ -141,8 +143,51 @@ public class AuthenticationService {
         return userMapper.toUsersRespone(user);
     }
 
+    @Transactional
+    public void forgotPassword(String email) {
+        Users user = userRepository.findByUsername(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        // Tạo OTP mới
+        String otp = generateVerificationCode();
+        log.info("✅ OTP tạo ra: {}", otp);
+        VerificationToken token = verificationTokenRepository.findByUser(user)
+                .orElse(new VerificationToken());
+
+        token.setUser(user);
+        token.setVerificationCode(otp);
+        token.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
+        token.setInvalidated(false);
+        token.setLastSentAt(LocalDateTime.now());
+
+        verificationTokenRepository.save(token);
+        verificationTokenRepository.flush(); // đảm bảo token được ghi ngay
+        // Gửi mail
+        emailService.sendEmail(user.getUsername(), "Reset Password OTP", otp);
+    }
+
+
+    @Transactional
+    public void resetPassword(String email, String newPassword) {
+        Users user = userRepository.findByUsername(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        VerificationToken token = verificationTokenRepository.findByUser(user)
+                .orElseThrow(() -> new AppException(ErrorCode.OTP_NOT_VERIFIED));
+
+        // OTP phải đã được xác thực (invalidated = true)
+        if (token.isInvalidated()) {
+            // OK, OTP đã được verify
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        } else {
+            throw new AppException(ErrorCode.OTP_NOT_VERIFIED);
+        }
+
+    }
+
     // Phương thức introspect: kiểm tra tính hợp lệ của JWT token
-    public IntrospectRespone introspect(IntrospectResquest resquest)
+    public IntrospectResponse introspect(IntrospectResquest resquest)
             throws JOSEException, ParseException {   // Có thể ném ra lỗi JOSE hoặc Parse nếu token sai format
 
         // 1. Lấy token từ request mà client gửi lên
@@ -160,7 +205,7 @@ public class AuthenticationService {
         }
 
         // 5. Trả về kết quả introspect cho client
-        return IntrospectRespone.builder()
+        return IntrospectResponse.builder()
                 .valid(inValid) // true = hợp lệ, false = không hợp lệ
                 .build();
     }
@@ -266,6 +311,8 @@ public class AuthenticationService {
         // 6️⃣ Vô hiệu hóa OTP sau khi dùng (đánh dấu chứ không xóa)
         verificationToken.setInvalidated(true);
         verificationTokenRepository.save(verificationToken);
+        log.info("🔍 Đang xác thực OTP: {}, expires at: {}, now: {}",
+                otp, verificationToken.getVerificationCodeExpiresAt(), LocalDateTime.now());
 
         // 7️⃣ (Tùy chọn) Xóa token cũ sau vài phút
         // verificationTokenRepository.delete(verificationToken);

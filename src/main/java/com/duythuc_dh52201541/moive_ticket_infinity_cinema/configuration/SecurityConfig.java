@@ -35,7 +35,9 @@ public class SecurityConfig {
             "/auth/refresh",
             "/auth/register",
             "/auth/verify",
-            "/auth/resendOTP"
+            "/auth/resendOTP",
+            "/auth/forgot-password",
+            "/auth/reset-password"
     };
     private final String[] ADMIN_ENDPOINTS = {
             "/users"

@@ -1,14 +1,13 @@
-package com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone;
+package com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request;
 
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Data // Lombok: sinh getter, setter, toString, equals, hashCode
 @NoArgsConstructor // Lombok: sinh constructor không tham số
@@ -16,18 +15,10 @@ import java.util.Set;
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
 @JsonInclude(JsonInclude.Include.NON_NULL) // Bỏ qua field null khi trả về JSON
-public class UsersRespone {
+public class ForgotPasswordRequest {
+    @NotBlank(message = "USERNAME_REQUIRED")
+    @Size(min = 3, message = "USERNAME_INVALID")
+    @Email(message = "USERNAME_MUST_BE_EMAIL")
+    String username;
 
-    String username; //su dung email
-    String password;
-    String firstname;
-    String lastname;
-    String phoneNumber;
-    LocalDate birthday;
-
-    @Enumerated(EnumType.STRING)
-    UserStatus userStatus;
-
-    Set<RoleResponse> roles;
-    boolean enabled;
 }

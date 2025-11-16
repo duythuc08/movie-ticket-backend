@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
-public class AuthenticationRespone {
+public class AuthenticationResponse {
     String token; //tra token ve cho user
     boolean authenticated; //true khi username+password dung
 }

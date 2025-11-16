@@ -42,54 +42,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiRespone);
     }
 
-//    // Xử lý ngoại lệ khi dữ liệu đầu vào vi phạm validation (@Valid, @NotNull, @Size, @DobConstraint,...)
-//    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-//    ResponseEntity<ApiResponse> handlingValidException(MethodArgumentNotValidException validException) {
-//
-//        // Lấy ra message được gán trong annotation validation
-//        // Ví dụ: @NotBlank(message = "USERNAME_INVALID") => lấy được "USERNAME_INVALID"
-//        String enumKey = validException.getFieldError().getDefaultMessage();
-//
-//        // Gán mặc định ErrorCode = INVALID_KEY (phòng trường hợp enumKey không tồn tại trong ErrorCode)
-//        ErrorCode errorCode = ErrorCode.INVALID_KEY;
-//
-//        // Map chứa metadata (attributes) của annotation validation (vd: min=18,...)
-//        Map<String,Object> attributes = null;
-//
-//        try {
-//            // Thử chuyển enumKey thành một phần tử trong ErrorCode
-//            // Ví dụ: "USERNAME_INVALID" -> ErrorCode.USERNAME_INVALID
-//            errorCode = ErrorCode.valueOf(enumKey);
-//
-//            // Lấy toàn bộ thông tin vi phạm (ConstraintViolation)
-//            var constrainViolation = validException.getBindingResult()
-//                    .getAllErrors().getFirst()       // lấy error đầu tiên
-//                    .unwrap(ConstraintViolation.class); // ép kiểu thành ConstraintViolation
-//
-//            // Lấy attributes từ annotation (vd: min=18 trong @DobConstraint(min=18))
-//            attributes = constrainViolation.getConstraintDescriptor().getAttributes();
-//
-//        } catch (IllegalArgumentException e) {
-//            // Nếu enumKey không map được với ErrorCode thì giữ nguyên INVALID_KEY
-//        }
-//
-//        // Tạo response chuẩn để trả về client
-//        ApiResponse apiRespone = new ApiResponse();
-//        apiRespone.setCode(errorCode.getCode()); // Gán mã lỗi (vd: 1003)
-//
-//        // Nếu annotation có attributes (vd: {min=18}) thì format message bằng mapAttribute()
-//        // Ví dụ: "Age must be at least {min}" -> "Age must be at least 18"
-//        // Ngược lại thì lấy message mặc định trong ErrorCode
-//        apiRespone.setMessage(Objects.nonNull(attributes)
-//                ? mapAttribute(errorCode.getMessage(), attributes)
-//                : errorCode.getMessage());
-//
-//        // Trả về ResponseEntity với HTTP status code tương ứng (lấy từ ErrorCode)
-//        return ResponseEntity
-//                .status(errorCode.getStatusCode())
-//                .body(apiRespone);
-//    }
-
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidation(MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult().getFieldError().getDefaultMessage();
+        return ResponseEntity.badRequest().body(ApiResponse.<Void>builder().message(message).build());
+    }
 
 
     // Đánh dấu method này để xử lý riêng cho lỗi AccessDeniedException (user đã đăng nhập nhưng không đủ quyền)

@@ -1,15 +1,10 @@
 package com.duythuc_dh52201541.moive_ticket_infinity_cinema.controller;
 
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.AuthenticationResquest;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.IntrospectResquest;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.LogoutResquest;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.RegisterRequest;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.ApiResponse;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.AuthenticationRespone;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.IntrospectRespone;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.UsersRespone;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.*;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.*;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,17 +35,17 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/introspect")
-    ApiResponse<IntrospectRespone> authenticate(@RequestBody IntrospectResquest resquest) throws ParseException, JOSEException {
+    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectResquest resquest) throws ParseException, JOSEException {
         var result = authenticationService.introspect(resquest);
-        return ApiResponse.<IntrospectRespone>builder()
+        return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
                 .build();
     }
 
     @PostMapping("/login")
-    ApiResponse<AuthenticationRespone> authenticate(@RequestBody AuthenticationResquest resquest){
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationResquest resquest){
         var result = authenticationService.authenticate(resquest);
-        return ApiResponse.<AuthenticationRespone>builder()
+        return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
                 .build();
     }
@@ -76,11 +71,26 @@ public class AuthenticationController {
     public ApiResponse<Void> verifyEmail(@RequestParam("otp") String otp, @RequestParam String email) {
         authenticationService.verifyEmail(otp,email);
         return ApiResponse.<Void>builder()
-                .message( "Xác thực thành công, bạn có thể đăng nhập" )
+                .message( "Xác thực thành công" )
                 .build();
 
     }
 
+    @PostMapping("/forgot-password")
+    public ApiResponse<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        authenticationService.forgotPassword(request.getUsername());
+        return ApiResponse.<Void>builder()
+                .message("OTP đã được gửi tới email")
+                .build();
+    }
+
+    @PostMapping("/reset-password")
+    public ApiResponse<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request,@RequestParam String email) {
+        authenticationService.resetPassword(email, request.getNewPassword());
+        return ApiResponse.<Void>builder()
+                .message("Lấy mật khẩu thành công")
+                .build();
+    }
     @PostMapping("/resendOTP")
     public ApiResponse<Void> resendOTP(@RequestParam String email) {
         authenticationService.resendOtp(email);

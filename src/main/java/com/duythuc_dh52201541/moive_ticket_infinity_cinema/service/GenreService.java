@@ -35,7 +35,7 @@ public class GenreService {
     @PreAuthorize("hasRole('ADMIN')")
     public GenreRespone createGenre(GenreCreationRequest request){
         if(genreRepository.existsByName(request.getName())){
-            throw new AppException(ErrorCode.GENRE_NOT_FOUND);
+            throw new AppException(ErrorCode.GENRE_EXISTED);
         }
         Genre genre = genreMapper.toGenre(request);
         return genreMapper.toGenreRespone(genreRepository.save(genre));

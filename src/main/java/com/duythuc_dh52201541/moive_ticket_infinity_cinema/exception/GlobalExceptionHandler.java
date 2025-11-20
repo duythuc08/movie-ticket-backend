@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         // Trả về HTTP status 400 (Bad Request) kèm theo message của exception
         ApiResponse apiRespone = new ApiResponse();
         apiRespone.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiRespone.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+        apiRespone.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiRespone);
     }
 

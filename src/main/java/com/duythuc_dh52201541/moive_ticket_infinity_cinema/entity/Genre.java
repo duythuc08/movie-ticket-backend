@@ -14,6 +14,8 @@ public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long genreId;
+
+    @Column(unique = true)
     String name;
 
     @Lob

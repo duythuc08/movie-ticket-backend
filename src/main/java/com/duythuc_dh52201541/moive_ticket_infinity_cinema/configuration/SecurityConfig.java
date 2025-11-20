@@ -41,7 +41,9 @@ public class SecurityConfig {
     };
     private final String[] ADMIN_ENDPOINTS = {
             "/users",
-            "/genre"
+            "/genre",
+            "/movies",
+            "/api/files/upload"
     };
 
 

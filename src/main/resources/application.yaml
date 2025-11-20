@@ -41,3 +41,11 @@ spring:
 #JWT secret key
 jwt:
   signerKey: "ktWvH+jVekZ1QVSc7imoQ0BmDed+jtf4wRlhq/U+2ctBDgk8kgtuMVe+9xS8Csxv"
+
+#Cloudinary
+cloudinary:
+  cloud_name: "dmwcvykjn"
+  api_key: "777287143839166"
+  api_secret: "oEUE763pY2TgIXimgf9P_il6c9Q"
+
+

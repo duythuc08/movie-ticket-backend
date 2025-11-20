@@ -23,7 +23,10 @@ public enum ErrorCode {
     OTP_RESEND_TOO_SOON(1012,"Please wait for 30 second before resend OTP",HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1009,"Unauthenticated",HttpStatus.UNAUTHORIZED),
     OTP_NOT_VERIFIED(1013,"OTP is not verified",HttpStatus.BAD_REQUEST),
-    GENRE_NOT_FOUND(1014,"Genre not found",HttpStatus.NOT_FOUND),;
+    GENRE_NOT_FOUND(1014,"Genre not found",HttpStatus.NOT_FOUND),
+    GENRE_EXISTED(1015,"Genre existed",HttpStatus.BAD_REQUEST),
+    MOVIE_NOT_FOUND(1016,"Movie not found",HttpStatus.NOT_FOUND),
+    MOVIE_EXISTED(1017,"Movie existed",HttpStatus.BAD_REQUEST),;
     // Constructor để gán giá trị cho từng phần tử enum
     ErrorCode(int code, String message,HttpStatusCode statusCode) {
         this.code = code;

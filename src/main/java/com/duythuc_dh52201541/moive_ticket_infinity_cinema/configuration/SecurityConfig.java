@@ -40,7 +40,8 @@ public class SecurityConfig {
             "/auth/reset-password"
     };
     private final String[] ADMIN_ENDPOINTS = {
-            "/users"
+            "/users",
+            "/genre"
     };
 
 

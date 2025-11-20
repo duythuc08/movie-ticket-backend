@@ -1,6 +1,7 @@
 package com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.PaymentStatus;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -34,6 +35,9 @@ public class Payments {
 
     LocalDateTime paymentDate;
     // ⏰ Ngày giờ thực hiện giao dịch
+
+    @Enumerated(EnumType.STRING)
+    PaymentType paymentType;
 
     @Enumerated(EnumType.STRING)
     PaymentStatus paymentStatus;

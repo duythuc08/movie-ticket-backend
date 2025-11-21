@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Entity
 @Table(name="persons")
 @Data // Lombok: sinh getter, setter, toString, equals, hashCode
@@ -19,6 +21,8 @@ public class Person {
 
     private String name;
     private String avatarUrl;   // ảnh đại diện
+
     @Enumerated(EnumType.STRING)
-    private MovieRole movieRole;        // ACTOR hoặc DIRECTOR
+    @Column(name = "movie_role")
+    private MovieRole movieRole;
 }

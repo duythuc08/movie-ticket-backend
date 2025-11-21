@@ -31,7 +31,7 @@ public class PersonService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public PersonResponse createPerson(PersonRequest request) {
-        if(personRepository.existsByName(request.getName())) {
+        if (personRepository.existsByNameAndMovieRole((request.getName()), request.getMovieRole())) {
             throw new AppException(ErrorCode.PERSON_EXISTED);
         }
         Person person = personMapper.toPerson(request);
@@ -42,10 +42,11 @@ public class PersonService {
     public List<PersonResponse> createPersons(List<PersonRequest> requests) {
         return requests.stream()
                 .map(request -> {
-                    if (personRepository.existsByName(request.getName())) {
+                    if (personRepository.existsByNameAndMovieRole((request.getName()), request.getMovieRole())) {
                         throw new AppException(ErrorCode.PERSON_EXISTED);
                     }
                     Person person = personMapper.toPerson(request);
+                    System.out.println("ROLE = " + person.getMovieRole());
                     return personMapper.toPersonResponse(personRepository.save(person));
                 })
                 .toList();

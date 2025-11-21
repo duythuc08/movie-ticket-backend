@@ -1,7 +1,7 @@
 package com.duythuc_dh52201541.moive_ticket_infinity_cinema.service;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.GenreCreationRequest;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.GenreRespone;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.GenreResponse;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Genre;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.exception.AppException;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.exception.ErrorCode;
@@ -25,7 +25,7 @@ public class GenreService {
     GenreMapper genreMapper;
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<GenreRespone> getGenres()
+    public List<GenreResponse> getGenres()
     {
         return genreRepository.findAll()
                 .stream()
@@ -33,7 +33,7 @@ public class GenreService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public GenreRespone createGenre(GenreCreationRequest request){
+    public GenreResponse createGenre(GenreCreationRequest request){
         if(genreRepository.existsByName(request.getName())){
             throw new AppException(ErrorCode.GENRE_EXISTED);
         }

@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,11 +30,23 @@ public class Movies {
     String posterUrl;      // Đường dẫn ảnh poster phim
     String trailerUrl;     // Đường dẫn trailer phim
     LocalDate releaseDate; // Ngày khởi chiếu
-    String director;       // Đạo diễn
-    String cast;           // Diễn viên chính
     String language;       // Ngôn ngữ phim
     String subTitle;       // Phụ đề (nếu có)
+    @ManyToMany
+    @JoinTable(
+            name = "movie_cast",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id")
+    )
+    private Set<Person> castPersons = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "movie_directors",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id")
+    )
+    private Set<Person> directors = new HashSet<>();
     @ManyToMany
     @JoinTable(
             name = "movie_genres",
@@ -46,7 +59,8 @@ public class Movies {
     AgeRating ageRating;   // Phân loại độ tuổi (P, 13+, 18+,...)
 
     @Enumerated(EnumType.STRING)
-    MovieStatus movie_status;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
+    @Column(name = "movie_status")
+    MovieStatus movieStatus;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
 
     LocalDateTime createdAt; // Ngày tạo bản ghi
     LocalDateTime updatedAt; // Ngày cập nhật cuối cùng

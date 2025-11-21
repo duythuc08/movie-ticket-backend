@@ -2,7 +2,7 @@ package com.duythuc_dh52201541.moive_ticket_infinity_cinema.controller;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.GenreCreationRequest;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.ApiResponse;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.GenreRespone;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.GenreResponse;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.service.GenreService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -23,8 +23,8 @@ public class GenreController {
     GenreService genreService;
 
     @PostMapping
-    ApiResponse<GenreRespone> createGenre(@RequestBody @Valid GenreCreationRequest request) {
-        return ApiResponse.<GenreRespone>builder()
+    ApiResponse<GenreResponse> createGenre(@RequestBody @Valid GenreCreationRequest request) {
+        return ApiResponse.<GenreResponse>builder()
                 .result(genreService.createGenre(request))
                 .message("Thêm genre thành công")
                 .build();

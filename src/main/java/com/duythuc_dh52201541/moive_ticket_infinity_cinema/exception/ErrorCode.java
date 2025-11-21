@@ -26,7 +26,9 @@ public enum ErrorCode {
     GENRE_NOT_FOUND(1014,"Genre not found",HttpStatus.NOT_FOUND),
     GENRE_EXISTED(1015,"Genre existed",HttpStatus.BAD_REQUEST),
     MOVIE_NOT_FOUND(1016,"Movie not found",HttpStatus.NOT_FOUND),
-    MOVIE_EXISTED(1017,"Movie existed",HttpStatus.BAD_REQUEST),;
+    MOVIE_EXISTED(1017,"Movie existed",HttpStatus.BAD_REQUEST),
+    PERSON_NOT_FOUND(1018,"Person not found",HttpStatus.NOT_FOUND),
+    PERSON_EXISTED(1019,"Person existed",HttpStatus.BAD_REQUEST),;
     // Constructor để gán giá trị cho từng phần tử enum
     ErrorCode(int code, String message,HttpStatusCode statusCode) {
         this.code = code;

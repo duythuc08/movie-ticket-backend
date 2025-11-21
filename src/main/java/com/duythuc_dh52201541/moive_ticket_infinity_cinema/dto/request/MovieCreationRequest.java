@@ -26,13 +26,14 @@ public class MovieCreationRequest {
     String posterUrl;      // Đường dẫn ảnh poster phim
     String trailerUrl;     // Đường dẫn trailer phim
     LocalDate releaseDate; // Ngày khởi chiếu
-    String director;       // Đạo diễn
-    String cast;           // Diễn viên chính
+    // ✅ thay vì String cast/director
+    private Set<Long> castIds;      // danh sách id của Person (actor)
+    private Set<Long> directorIds;  // danh sách id của Person (director)
     String language;       // Ngôn ngữ phim
     String subTitle;       // Phụ đề (nếu có)
 
     Set<String> genreName;      // Danh sách thể loại của phim (nhiều-nhiều)
 
     AgeRating ageRating;   // Phân loại độ tuổi (P, 13+, 18+,...)
-    MovieStatus movie_status;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
+    MovieStatus movieStatus;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
 }

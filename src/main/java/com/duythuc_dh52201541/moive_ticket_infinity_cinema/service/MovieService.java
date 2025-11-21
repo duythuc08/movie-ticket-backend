@@ -1,8 +1,8 @@
 package com.duythuc_dh52201541.moive_ticket_infinity_cinema.service;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.MovieCreationRequest;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.AdminMovieRespone;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.MovieRespone;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.AdminMovieResponse;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.MovieResponse;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Genre;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Movies;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.exception.AppException;
@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +32,7 @@ public class MovieService {
     private final GenreRepository genreRepository;
 
     @PreAuthorize("hasRole('ADMIN')")
-    public MovieRespone createMovie(MovieCreationRequest request){
+    public MovieResponse createMovie(MovieCreationRequest request){
         if(movieRepository.existsByTitle(request.getTitle())){
             throw new AppException(ErrorCode.MOVIE_EXISTED);
         }
@@ -49,7 +48,7 @@ public class MovieService {
         return   movieMapper.toMovieRespone(movieRepository.save(movie));
     }
 
-    public List<MovieRespone> getMovies(){
+    public List<MovieResponse> getMovies(){
         return movieRepository.findAll()
                 .stream()
                 .map(movieMapper::toMovieRespone)
@@ -57,7 +56,7 @@ public class MovieService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<AdminMovieRespone> getAdminMovies(){
+    public List<AdminMovieResponse> getAdminMovies(){
         return movieRepository.findAll()
                 .stream()
                 .map(movieMapper::toAdminMovieRespone)

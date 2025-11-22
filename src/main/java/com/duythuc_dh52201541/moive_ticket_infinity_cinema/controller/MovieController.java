@@ -43,4 +43,29 @@ public class MovieController {
                 .result(movieService.getMovies())
                 .build();
     }
+    @GetMapping("/{id}")
+    public ApiResponse<MovieResponse> getMovieById(@PathVariable Long id) {
+        return ApiResponse.<MovieResponse>builder()
+                .result(movieService.getMovieById(id))
+                .build();
+    }
+    @GetMapping("/showing")
+    ApiResponse<List<MovieResponse>> getShowingMovies(){
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getMoviesShowing())
+                .build();
+    }
+
+    @GetMapping("/comingSoon")
+    ApiResponse<List<MovieResponse>> getComingSoonMovies(){
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getMoviesComingSoon())
+                .build();
+    }
+    @GetMapping("/imax")
+    ApiResponse<List<MovieResponse>> getImaxMovies(){
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getMoviesImax())
+                .build();
+    }
 }

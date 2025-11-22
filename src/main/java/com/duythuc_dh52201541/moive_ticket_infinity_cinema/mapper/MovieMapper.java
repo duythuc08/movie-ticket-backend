@@ -10,8 +10,8 @@ import org.mapstruct.Mapper;
 public interface MovieMapper {
     Movies toMovies(MovieCreationRequest request);
 
-    MovieResponse toMovieRespone(Movies movies);
+    MovieResponse toMovieResponse(Movies movies);
 
-    AdminMovieResponse toAdminMovieRespone(Movies movies);
+    AdminMovieResponse toAdminMovieResponse(Movies movies);
 
 }

@@ -23,15 +23,16 @@ public class AdminMovieResponse {
     String posterUrl;      // Đường dẫn ảnh poster phim
     String trailerUrl;     // Đường dẫn trailer phim
     LocalDate releaseDate; // Ngày khởi chiếu
-    String director;       // Đạo diễn
-    String cast;           // Diễn viên chính
+    // ✅ thay vì String cast/director
+    private Set<PersonResponse> castPersons;   // danh sách diễn viên
+    private Set<PersonResponse> directors;     // danh sách đạo diễn
     String language;       // Ngôn ngữ phim
     String subTitle;       // Phụ đề (nếu có)
 
     Set<GenreResponse> genre;      // Danh sách thể loại của phim (nhiều-nhiều)
 
     AgeRating ageRating;   // Phân loại độ tuổi (P, 13+, 18+,...)
-    MovieStatus movie_status;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
+    MovieStatus movieStatus;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
     LocalDateTime createdAt; // Ngày tạo bản ghi
     LocalDateTime updatedAt; // Ngày cập nhật cuối cùng
 }

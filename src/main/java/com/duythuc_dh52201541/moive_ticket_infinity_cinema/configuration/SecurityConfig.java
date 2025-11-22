@@ -37,7 +37,12 @@ public class SecurityConfig {
             "/auth/verify",
             "/auth/resendOTP",
             "/auth/forgot-password",
-            "/auth/reset-password"
+            "/auth/reset-password",
+            "/movies/{id}",
+            "/movies/showing",
+            "/movies/comingSoon",
+            "/movies/imax",
+            "/movies/getMovies",
     };
     private final String[] ADMIN_ENDPOINTS = {
             "/users",

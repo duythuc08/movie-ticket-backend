@@ -31,6 +31,5 @@ public class MovieResponse {
     Set<GenreResponse> genre;      // Danh sách thể loại của phim (nhiều-nhiều)
 
     AgeRating ageRating;   // Phân loại độ tuổi (P, 13+, 18+,...)
-    MovieStatus movie_status;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
-
+    MovieStatus movieStatus;    // Trạng thái phim (Đang chiếu, Sắp chiếu,...)
 }

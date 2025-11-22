@@ -38,13 +38,11 @@ public class Banner {
     @Enumerated(EnumType.STRING)
     BannerType bannerType;
 
-    // Nếu banner gắn với phim thì tạo quan hệ ManyToOne
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "movie_id")
     private Movies movies;
 
-    // Nếu banner gắn với sự kiện thì tạo quan hệ ManyToOne
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private Event event;
 }

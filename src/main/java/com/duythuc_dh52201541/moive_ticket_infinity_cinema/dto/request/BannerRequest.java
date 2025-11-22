@@ -26,5 +26,5 @@ public class BannerRequest {
     private Long movieId;        // nếu banner gắn với phim
     private Long eventId;        // nếu banner gắn với sự kiện
 
-    private BannerType type;     // MOVIE, EVENT, ADVERTISEMENT
+    private BannerType bannerType;     // MOVIE, EVENT, ADVERTISEMENT
 }

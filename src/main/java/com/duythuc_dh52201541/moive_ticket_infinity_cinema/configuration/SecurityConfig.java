@@ -43,12 +43,14 @@ public class SecurityConfig {
             "/movies/comingSoon",
             "/movies/imax",
             "/movies/getMovies",
+            "/banners/getBanners",
     };
     private final String[] ADMIN_ENDPOINTS = {
             "/users",
             "/genre",
             "/movies",
-            "/api/files/upload"
+            "/api/files/upload",
+            "/banners"
     };
 
 

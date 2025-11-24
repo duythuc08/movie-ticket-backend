@@ -17,6 +17,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
 @JsonInclude(JsonInclude.Include.NON_NULL) // Bỏ qua field null khi trả về JSON
 public class AdminMovieResponse {
+    Long movieId;
     String title;          // Tên phim
     String description;    // Mô tả nội dung phim
     Integer duration;      // Thời lượng phim (tính bằng phút)

@@ -38,7 +38,7 @@ public class SecurityConfig {
             "/auth/resendOTP",
             "/auth/forgot-password",
             "/auth/reset-password",
-            "/movies/{id}",
+            "/movies/*",
             "/movies/showing",
             "/movies/comingSoon",
             "/movies/imax",

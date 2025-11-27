@@ -1,5 +1,6 @@
 package com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity;
 
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.SeatShowTimeStatus;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.SeatStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,5 +36,5 @@ public class SeatShowTime {
     OrderTickets orderTicket;
 
     @Enumerated(EnumType.STRING)
-    SeatStatus seatStatus;
+    SeatShowTimeStatus seatShowTimeStatus;
 }

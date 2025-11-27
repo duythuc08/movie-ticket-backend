@@ -37,7 +37,15 @@ public enum ErrorCode {
     EVENT_ID_NOT_ALLOWED(1025,"Event Id is not allowed",HttpStatus.BAD_REQUEST),
     EVENT_ID_REQUIRED(1026,"Event Id is required",HttpStatus.BAD_REQUEST),
     MOVIE_ID_NOT_ALLOWED(1027,"Movie Id is not allowed",HttpStatus.BAD_REQUEST),
-    BANNER_TYPE_INVALID(1028,"Banner type is invalid",HttpStatus.BAD_REQUEST),;
+    BANNER_TYPE_INVALID(1028,"Banner type is invalid",HttpStatus.BAD_REQUEST),
+    CINEMA_EXISTED(1029,"Cinema existed",HttpStatus.BAD_REQUEST),
+    CINEMA_NOT_FOUND(1030,"Cinema not found",HttpStatus.NOT_FOUND),
+    ROOM_EXISTED(1031,"Room existed",HttpStatus.BAD_REQUEST),
+    ROOM_NOT_FOUND(1032,"Room not found",HttpStatus.NOT_FOUND),
+    SEAT_EXISTED(1033,"Seat existed",HttpStatus.BAD_REQUEST),
+    SEAT_NOT_FOUND(1034,"Seat Not Found",HttpStatus.NOT_FOUND),
+    SHOWTIME_EXISTED(1035,"Show Time existed",HttpStatus.BAD_REQUEST),
+    SHOWTIME_NOT_FOUND(1036,"Show Time not found",HttpStatus.NOT_FOUND),;
     // Constructor để gán giá trị cho từng phần tử enum
     ErrorCode(int code, String message,HttpStatusCode statusCode) {
         this.code = code;

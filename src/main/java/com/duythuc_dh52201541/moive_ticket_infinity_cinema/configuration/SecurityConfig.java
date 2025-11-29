@@ -44,9 +44,12 @@ public class SecurityConfig {
             "/movies/imax",
             "/movies/getMovies",
             "/banners/getBanners",
-            "/cinemas/getCinema",
+            "/cinemas/getCinemas",
             "/cinemas/getCinema/*",
             "/rooms/getRooms/**",
+            "/showtimes/getShowTimes/**",
+            "/showtimes/getShowTimes/by-cinema/**",
+            "/showtimes/getShowTimes/active/by-movie/**",
 
 
     };
@@ -60,6 +63,8 @@ public class SecurityConfig {
             "/cinemas/bluk",
             "/rooms",
             "/rooms/bluk",
+            "/showtimes",
+            "/showtimes/bluk",
 
     };
 

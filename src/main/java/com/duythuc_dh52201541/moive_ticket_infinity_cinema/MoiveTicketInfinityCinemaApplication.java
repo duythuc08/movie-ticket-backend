@@ -14,10 +14,4 @@ public class MoiveTicketInfinityCinemaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MoiveTicketInfinityCinemaApplication.class, args);
 	}
-//    @Bean
-//    CommandLineRunner run(DataMigrationService migrationService) {
-//        return args -> {
-//            migrationService.migrateCastAndDirectors();
-//        };
-//    }
 }

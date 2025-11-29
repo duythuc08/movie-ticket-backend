@@ -42,7 +42,7 @@ public class MovieService {
         }
         Movies movie = movieMapper.toMovies(request);
 
-        // Convert genreNames -> Genre entities
+        // ✅Convert genreNames -> Genre entities
         Set<Genre> genres = request.getGenreName().stream()
                 .map(name -> genreRepository.findByName(name)
                         .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_FOUND)))

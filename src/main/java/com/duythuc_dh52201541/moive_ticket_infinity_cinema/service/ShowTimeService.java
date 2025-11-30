@@ -9,7 +9,9 @@ import com.duythuc_dh52201541.moive_ticket_infinity_cinema.exception.ErrorCode;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.mapper.ShowTimeMapper;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.repository.MovieRepository;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.repository.RoomRepository;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.repository.SeatShowTimeRepository;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.repository.ShowTimeRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,24 +33,44 @@ public class ShowTimeService {
     // Cần thêm 2 Repository này để tìm kiếm
     private final MovieRepository movieRepository;
     private final RoomRepository roomRepository;
-
+    private final SeatShowTimeRepository seatShowTimeRepository;
+    @Transactional // QUAN TRỌNG: Đảm bảo tạo Showtime + Tạo Ghế thành công cùng lúc
     @PreAuthorize("hasRole('ADMIN')")
     public ShowTimeResponse createShowTime(ShowTimeRequest request) {
-        // FIX: Phải check trùng lịch theo ROOM ID (Phòng chiếu), không phải Movie ID
-        // Cần đảm bảo request.getRooms() không null để tránh NullPointerException (Lỗi 999)
+        // 1. Validation
         if (request.getRoomId() == null) {
-            throw new RuntimeException("Room ID is required"); // Hoặc ném AppException phù hợp
+            throw new RuntimeException("Room ID is required");
         }
 
+        // Check Room tồn tại (để tránh lỗi FK database xấu xí)
+        if (!roomRepository.existsById(request.getRoomId())) {
+            throw new RuntimeException("Room not found");
+        }
+
+        // Check trùng lịch
         if (showTimeRepository.existsConflictingShowtime(
-                request.getRoomId(), // Đã sửa từ getMovies() thành getRooms()
+                request.getRoomId(),
                 request.getStartTime(),
                 request.getEndTime())) {
             throw new AppException(ErrorCode.SHOWTIME_EXISTED);
         }
 
+        // 2. Lưu Showtime trước (để lấy ID)
         ShowTimes showTimes = showTimeMapper.toShowTimes(request);
-        return showTimeMapper.toShowTimeResponse(showTimeRepository.save(showTimes));
+        // Lưu ý: Cần set Room cho entity showTimes nếu mapper chưa làm
+        // showTimes.setRooms(roomRepository.getReferenceById(request.getRoomId()));
+
+        ShowTimes savedShowTime = showTimeRepository.save(showTimes);
+
+        // 3. GỌI HÀM SQL NATIVE ĐỂ GENERATE GHẾ
+        // Lúc này savedShowTime đã có ID
+        seatShowTimeRepository.bulkInsertSeatsForShowTime(
+                savedShowTime.getShowTimeId(),
+                request.getRoomId()
+        );
+
+        // 4. Trả về response
+        return showTimeMapper.toShowTimeResponse(savedShowTime);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

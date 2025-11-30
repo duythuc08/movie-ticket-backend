@@ -3,6 +3,7 @@ package com.duythuc_dh52201541.moive_ticket_infinity_cinema.repository;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.ShowTimes;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.ShowTimeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -10,6 +11,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ShowTimeRepository extends JpaRepository<ShowTimes, String> {
+
+    /**
+     * Tự động clone ghế từ bảng Seat sang SeatShowTime bằng SQL thuần (Cực nhanh)
+     * 1. Lấy tất cả ghế thuộc phòng của suất chiếu.
+     * 2. Insert vào bảng seat_show_time.
+     * 3. Set trạng thái bán vé (seat_show_time_status) là 'AVAILABLE'.
+     * 4. Copy trạng thái vật lý (seat_status) từ ghế gốc (để biết ghế nào đang bảo trì).
+     */
+
 
     // Tương tự cho hàm lấy tất cả (thay thế findAll)
     @Query("SELECT s FROM ShowTimes s " +
@@ -50,4 +60,6 @@ public interface ShowTimeRepository extends JpaRepository<ShowTimes, String> {
                                       @Param("newItemEnd") LocalDateTime newItemEnd);
 
     List<ShowTimes> findByMovies_MovieId(Long movieId);
+
+    boolean existsByShowTimeId(Long showTimeId);
 }

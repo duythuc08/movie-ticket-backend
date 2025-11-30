@@ -11,4 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationResponse {
     String token; //tra token ve cho user
     boolean authenticated; //true khi username+password dung
+    boolean enabled;
 }

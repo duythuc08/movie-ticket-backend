@@ -46,4 +46,11 @@ public class BannerController {
                 .result(bannerService.getBanners())
                 .build();
     }
+
+    @GetMapping("/getBanners_active")
+    ApiResponse<List<BannerResponse>> listBannersActive(){
+        return ApiResponse.<List<BannerResponse>>builder()
+                .result(bannerService.getBannersByActive())
+                .build();
+    }
 }

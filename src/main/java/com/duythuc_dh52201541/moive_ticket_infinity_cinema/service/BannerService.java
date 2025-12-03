@@ -144,4 +144,11 @@ public class BannerService {
                 .map(bannerMapper :: toBannerResponse)
                 .toList();
     }
+
+    public List<BannerResponse> getBannersByActive(){
+        return bannerRepository.findByActiveTrueOrderByPriorityAsc()
+                .stream()
+                .map(bannerMapper :: toBannerResponse)
+                .toList();
+    }
 }

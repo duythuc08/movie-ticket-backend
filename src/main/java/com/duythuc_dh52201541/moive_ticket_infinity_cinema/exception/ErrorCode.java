@@ -49,7 +49,9 @@ public enum ErrorCode {
     SEAT_SHOWTIME_EXISTED(1037,"Seat Show Time existed",HttpStatus.BAD_REQUEST),
     SEAT_SHOWTIME_NOT_FOUND(1038,"Seat Show Time not found",HttpStatus.NOT_FOUND),
     SHOWTIME_PRICE_EXISTED(1039,"Show Time price existed",HttpStatus.BAD_REQUEST),
-    SHOWTIME_PRICE_NOT_FOUND(1040,"Show Time price not found",HttpStatus.NOT_FOUND),;
+    SHOWTIME_PRICE_NOT_FOUND(1040,"Show Time price not found",HttpStatus.NOT_FOUND),
+    FOOD_EXISTED(1041,"Food existed",HttpStatus.BAD_REQUEST),
+    FOOD_NOT_FOUND(1042,"Food not found",HttpStatus.NOT_FOUND),;
     // Constructor để gán giá trị cho từng phần tử enum
     ErrorCode(int code, String message,HttpStatusCode statusCode) {
         this.code = code;

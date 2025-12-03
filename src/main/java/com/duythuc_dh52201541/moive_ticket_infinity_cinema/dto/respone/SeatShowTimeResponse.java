@@ -5,9 +5,6 @@ import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.ShowTimes;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.Users;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.RoomType;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.SeatShowTimeStatus;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.model_entity.SeatModel;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.model_entity.ShowTimeModel;
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.model_entity.UserModel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

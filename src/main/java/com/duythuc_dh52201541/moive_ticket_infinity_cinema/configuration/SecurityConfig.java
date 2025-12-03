@@ -43,7 +43,7 @@ public class SecurityConfig {
             "/movies/comingSoon",
             "/movies/imax",
             "/movies/getMovies",
-            "/banners/getBanners",
+            "/banners/getBanners/**",
             "/cinemas/getCinemas",
             "/cinemas/getCinema/*",
             "/rooms/getRooms/**",

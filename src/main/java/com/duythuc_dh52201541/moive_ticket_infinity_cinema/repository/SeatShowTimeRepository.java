@@ -14,8 +14,8 @@ import java.util.List;
 public interface SeatShowTimeRepository extends JpaRepository<SeatShowTime, String> {
 
     @Modifying // Bắt buộc vì đây là lệnh INSERT/UPDATE
-    @Query(value = "INSERT INTO seat_show_time (seat_id, show_time_id, seat_show_time_status, seat_status) " +
-            "SELECT s.seat_id, :showTimeId, 'AVAILABLE', s.seat_status " +
+    @Query(value = "INSERT INTO seat_show_time (seat_id, show_time_id, seat_show_time_status) " +
+            "SELECT s.seat_id, :showTimeId, 'AVAILABLE'" +
             "FROM seat s " +
             "WHERE s.room_id = :roomId",
             nativeQuery = true)

@@ -6,6 +6,7 @@ import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -38,4 +39,7 @@ public interface RoomRepository extends JpaRepository<Rooms, Long> {
      * Dùng cho chức năng Search: Admin gõ "VIP" -> ra các phòng VIP của rạp đó.
      */
     List<Rooms> findByCinemas_CinemaIdAndNameContainingIgnoreCase(Long cinemaId, String keyword);
+
+    Optional<Rooms> findByRoomId(Long roomId);
+
 }

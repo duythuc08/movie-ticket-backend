@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public interface MovieRepository extends JpaRepository<Movies,String> {
     boolean existsByTitle(String title);
-    boolean existsByMovieId(Long id);
+
+    boolean existsByMovieId(Long movieId);
     List<Movies> findByMovieStatus(MovieStatus movieStatus);
 
     Optional<Movies> findByMovieId(Long id);

@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -27,8 +28,7 @@ public interface SeatShowTimeRepository extends JpaRepository<SeatShowTime, Stri
     // SQL Table: seat_show_time
     List<SeatShowTime> findByShowTimes_ShowTimeId(Long showTimeId);
 
-    // --- API ĐẶT VÉ (BOOKING) ---
-    List<SeatShowTime> findAllBySeatShowTimeId(Long seatShowTimeId);
+    List<SeatShowTime> findAllBySeatShowTimeIdIn(Collection<Long> seatShowTimeIds);
 
     // Check nhanh xem list ghế này có cái nào ĐÃ BÁN hoặc ĐANG GIỮ không?
     // SQL column: seat_show_time_status enum('AVAILABLE','BLOCKED','RESERVED','SOLD')

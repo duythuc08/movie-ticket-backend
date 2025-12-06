@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<Users,String> {
     boolean existsByUsername(String username);
     Optional<Users> findByUsername(String username);
     List<Users> findAllByEnabledFalseAndCreatedAtBefore(LocalDateTime time);
+
+    Optional<Users> findByUserId(String userId);
 }

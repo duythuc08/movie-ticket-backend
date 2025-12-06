@@ -1,6 +1,6 @@
 package com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity;
 
-import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.OderStatus;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -38,7 +38,9 @@ public class Orders {
     String promotionCode;         // Mã khuyến mãi được áp dụng (nếu có)
 
     @Enumerated(EnumType.STRING)
-    OderStatus orderStatus;       // Trạng thái đơn hàng (đang xử lý, đã thanh toán, đã hủy,...)
+    OrderStatus orderStatus;       // Trạng thái đơn hàng (đang xử lý, đã thanh toán, đã hủy,...)
+
+    String qrCode;
 
     LocalDateTime bookingTime;    // Thời điểm người dùng đặt vé
     LocalDateTime expiredTime;    // Thời điểm hết hạn giữ vé (nếu chưa thanh toán)

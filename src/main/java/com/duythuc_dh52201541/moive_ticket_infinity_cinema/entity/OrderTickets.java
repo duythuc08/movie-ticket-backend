@@ -23,7 +23,7 @@ public class OrderTickets {
     Long orderTicketId;
     @Column(nullable = false)
     BigDecimal price;
-    String qrCode;
+
 
     @Enumerated(EnumType.STRING)
     TicketStatus ticketStatus;

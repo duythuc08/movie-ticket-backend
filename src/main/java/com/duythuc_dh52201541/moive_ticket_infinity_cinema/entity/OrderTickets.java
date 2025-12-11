@@ -36,7 +36,7 @@ public class OrderTickets {
     @JoinColumn(name = "order_id")
     Orders orders;
 
-    @OneToOne
-    @JoinColumn(name = "seat_show_time_id",nullable = false)
-    SeatShowTime seatShowTime;
+    @ManyToOne(fetch = FetchType.LAZY) // Đổi thành ManyToOne
+    @JoinColumn(name = "seat_show_time_id")
+    private SeatShowTime seatShowTime;
 }

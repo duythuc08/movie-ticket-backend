@@ -62,6 +62,7 @@ public class PaymentService {
             // Cập nhật ghế thành ĐÃ BÁN (Không ai mua được nữa)
             SeatShowTime sst = t.getSeatShowTime();
             sst.setSeatShowTimeStatus(SeatShowTimeStatus.SOLD);
+            sst.setLockedUntil(null);
             seatShowTimeRepository.save(sst);
         }
         orderTicketRepository.saveAll(tickets);

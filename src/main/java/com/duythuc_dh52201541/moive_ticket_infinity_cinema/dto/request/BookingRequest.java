@@ -15,7 +15,7 @@ public class BookingRequest {
     String userId;
 
     List<OrderFoodsRequest> foods;
-    List<Long> seatShowTimeId;
+    List<Long> seatShowTimeIds;
 
     String promotionCode;
 }

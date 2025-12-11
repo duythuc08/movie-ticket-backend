@@ -47,15 +47,33 @@ public class BookingService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         //2. Kiểm tra và lock ghế được chọn
-        List<SeatShowTime> seats = seatShowTimeRepository.findAllBySeatShowTimeIdIn(request.getSeatShowTimeId());
-        if(seats.size() != request.getSeatShowTimeId().size()){
+        List<SeatShowTime> seats = seatShowTimeRepository.findAllBySeatShowTimeIdIn(request.getSeatShowTimeIds());
+        if(seats.size() != request.getSeatShowTimeIds().size()){
             throw new RuntimeException("Dữ liệu ghế không hợp lệ");
         }
         for (SeatShowTime seat : seats) {
-            if(!seat.getSeatShowTimeStatus().equals(SeatShowTimeStatus.AVAILABLE))
-                throw new RuntimeException("Ghế " + seat.getSeats().getSeatRow() + seat.getSeats().getSeatNumber() + " đã có người đặt!");
+            boolean isAvailable = false;
+
+            // Trường hợp 1: Ghế đang trống
+            if (seat.getSeatShowTimeStatus() == SeatShowTimeStatus.AVAILABLE) {
+                isAvailable = true;
+            }
+            // Trường hợp 2: Ghế đang giữ (RESERVED) nhưng đã HẾT HẠN (quá giờ LockedUntil)
+            else if (seat.getSeatShowTimeStatus() == SeatShowTimeStatus.RESERVED) {
+                if (seat.getLockedUntil() != null && seat.getLockedUntil().isBefore(now)) {
+                    isAvailable = true; // Cho phép đặt đè lên
+                }
+            }
+
+            // Nếu không thỏa mãn cả 2 trường hợp trên -> Báo lỗi
+            if (!isAvailable) {
+                throw new RuntimeException("Ghế " + seat.getSeats().getSeatRow() + seat.getSeats().getSeatNumber() + " đã có người đặt hoặc đang được giữ!");
+            }
+
+            // Cập nhật trạng thái ghế
+            seat.setUsers(user); // Gán người dùng mới
             seat.setSeatShowTimeStatus(SeatShowTimeStatus.RESERVED);
-            seat.setLockedUntil(now.plusMinutes(5));
+            seat.setLockedUntil(expirationTime);
         }
         seatShowTimeRepository.saveAll(seats);
 

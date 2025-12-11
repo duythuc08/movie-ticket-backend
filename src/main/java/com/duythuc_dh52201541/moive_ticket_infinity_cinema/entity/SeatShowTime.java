@@ -2,11 +2,13 @@ package com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.SeatShowTimeStatus;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.SeatStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,8 +37,9 @@ public class SeatShowTime {
     @JoinColumn(name = "show_time_id")
     ShowTimes showTimes;
 
-    @OneToOne(mappedBy = "seatShowTime")
-    OrderTickets orderTicket;
+    @OneToMany(mappedBy = "seatShowTime", fetch = FetchType.LAZY)
+    @JsonIgnore // Thêm cái này để tránh vòng lặp vô tận khi gọi API
+    private List<OrderTickets> orderTickets;
 
     @Enumerated(EnumType.STRING)
     SeatShowTimeStatus seatShowTimeStatus;

@@ -50,6 +50,7 @@ public class SecurityConfig {
             "/showtimes/getShowTimes/**",
             "/showtimes/getShowTimes/by-cinema/**",
             "/showtimes/getShowTimes/active/by-movie/**",
+            "/payment/vnpay-callback",
 
 
     };

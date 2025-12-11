@@ -9,14 +9,17 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 @Entity
-@Data // Lombok: sinh getter, setter, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SeatShowTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     Long seatShowTimeId;
     LocalDateTime lockedUntil;
 

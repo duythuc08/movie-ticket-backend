@@ -13,14 +13,17 @@ import java.util.Set;
 
 @Entity
 @Table(name = "show_time")
-@Data // Lombok: sinh getter, setter, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ShowTimes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     Long showTimeId;
 
     LocalDateTime startTime;

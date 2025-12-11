@@ -2,7 +2,9 @@ package com.duythuc_dh52201541.moive_ticket_infinity_cinema.service;
 
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.BookingRequest;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.request.OrderFoodsRequest;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.OrderFoodResponse;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.OrderResponse;
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone.OrderTicketResponse;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.entity.*;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.*;
 import com.duythuc_dh52201541.moive_ticket_infinity_cinema.exception.AppException;
@@ -28,7 +30,6 @@ public class BookingService {
     OrderTicketRepository  orderTicketRepository;
     OrderFoodRepository orderFoodRepository;
     SeatShowTimeRepository seatShowTimeRepository;
-    ShowTimePriceRepository showTimePriceRepository;
     FoodRepository foodRepository;
     UserRepository userRepository;
     ShowTimePriceService showTimePriceService;
@@ -40,6 +41,7 @@ public class BookingService {
         // 1. LẤY THỜI GIAN CHUẨN (Dùng chung cho toàn bộ hàm)
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(HOLD_SEAT_MINUTES);
+
         //1. Kiểm tra user đặt vé
         Users user = userRepository.findByUserId(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -61,6 +63,7 @@ public class BookingService {
         Orders order = Orders.builder()
                 .users(user)
                 .bookingTime(now)
+                .createdAt(now)
                 .expiredTime(now.plusMinutes(5))
                 .orderStatus(OrderStatus.PENDING)
                 .build();
@@ -84,7 +87,9 @@ public class BookingService {
             if (price == null) {
                 throw new RuntimeException("Lỗi hệ thống: Không tìm thấy giá cho ghế loại " + currentSeatType);
             }
+
             //c. Tạo vé với giá vừa lấy
+
             OrderTickets ticket = OrderTickets.builder()
                     .orders(order)
                     .seatShowTime(seat)
@@ -176,9 +181,31 @@ public class BookingService {
         order.setDiscountAmount(discountAmount);      // Set tiền giảm
         order.setPromotionCode(appliedPromotionCode); // Set mã đã dùng
         order.setFinalPrice(finalPrice);              // Set tiền phải trả cuối cùng
+        order.setUpdatedAt(now);
+        // Sau khi save xong, map tickets sang response
+        List<OrderTicketResponse> ticketResponses = tickets.stream()
+                .map(ticket -> OrderTicketResponse.builder()
+                        .orderTicketId(ticket. getOrderTicketId())
+                        .seatName(ticket.getSeatShowTime().getSeats().getSeatRow()+ticket.getSeatShowTime().getSeats().getSeatNumber())
+                        .price(ticket.getPrice())
+                        .seatType(ticket.getSeatShowTime().getSeats().getSeatType())
+                        .build())
+                .toList();
+
+        // Map foods sang response
+        List<OrderFoodResponse> foodResponses = orderFoods.stream()
+                .map(food -> OrderFoodResponse.builder()
+                        .foodId(food.getFoods().getFoodId())
+                        .name(food.getFoods().getName())
+                        .quantity(food.getQuantity())
+                        .unitPrice(food.getUnitPrice())
+                        .totalPrice(food.getTotalPrice())
+                        .build())
+                .toList();
 
         Orders savedOrder = orderRepository.save(order);
-        // 8. Map sang OrderResponse và trả về
+
+        // Trả về response ĐẦY ĐỦ
         return OrderResponse.builder()
                 .orderId(savedOrder.getOrderId())
                 .userId(savedOrder.getUsers().getUserId())
@@ -190,9 +217,14 @@ public class BookingService {
                 .finalPrice(savedOrder.getFinalPrice())
                 .bookingTime(savedOrder.getBookingTime())
                 .expiredTime(savedOrder.getExpiredTime())
-                .promotionCode(savedOrder.getPromotionCode())
+                .createdAt(savedOrder.getCreatedAt())
+                .updatedAt(savedOrder.getUpdatedAt())
                 .orderStatus(savedOrder.getOrderStatus())
-                // ... map các field khác cần thiết
+                // ========== THÊM 2 DÒNG NÀY ==========
+                .tickets(ticketResponses)
+                .foods(foodResponses)
+                // =====================================
+                .qrCode(savedOrder.getQrCode())
                 .build();
     }
 }

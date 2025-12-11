@@ -81,29 +81,29 @@ public class AuthenticationService {
     // ✅ Hàm xử lý đăng xuất (logout) — vô hiệu hóa token đang sử dụng
     public void logout(LogoutResquest request) throws ParseException, JOSEException {
         try {
-            // 1️⃣ Xác thực (verify) token nhận được từ client (FE gửi lên trong request body)
+            //1.Xác thực (verify) token nhận được từ client (FE gửi lên trong request body)
             //    - Nếu token không hợp lệ hoặc đã hết hạn → verifyToken() sẽ ném AppException
             var signToken = verifyToken(request.getToken());
 
-            // 2️⃣ Lấy "JWT ID" (jit) từ phần claims của token
+            //2.Lấy "JWT ID" (jit) từ phần claims của token
             //    → Đây là mã định danh duy nhất cho mỗi JWT, dùng để theo dõi token bị vô hiệu hóa
             String jit = signToken.getJWTClaimsSet().getJWTID();
 
-            // 3️⃣ Lấy thời gian hết hạn (expiryTime) của token để biết khi nào có thể xóa khỏi DB
+            //3.Lấy thời gian hết hạn (expiryTime) của token để biết khi nào có thể xóa khỏi DB
             Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
-            // 4️⃣ Tạo một bản ghi mới đánh dấu token này là "đã bị vô hiệu hóa"
+            //4.Tạo một bản ghi mới đánh dấu token này là "đã bị vô hiệu hóa"
             InvalidatedToken invalidatedToken = InvalidatedToken.builder()
                     .id(jit)                 // Lưu lại JWT ID
                     .expiryTime(expiryTime)  // Lưu lại thời gian hết hạn
                     .build();
 
-            // 5️⃣ Lưu token này vào cơ sở dữ liệu (bảng invalidated_token)
+            //5. Lưu token này vào cơ sở dữ liệu (bảng invalidated_token)
             //    → Khi có request mới đến, hệ thống sẽ kiểm tra xem token này có trong danh sách bị vô hiệu hóa không.
             invalidatedTokenRepository.save(invalidatedToken);
 
         } catch (AppException exception) {
-            // 6️⃣ Nếu verifyToken() ném AppException (token hết hạn, sai định dạng, v.v.)
+            //6.Nếu verifyToken() ném AppException (token hết hạn, sai định dạng, v.v.)
             //    → Chỉ log thông báo, không ném lỗi ra ngoài vì token hết hạn thì coi như đã logout xong rồi
             log.info("Token already expired");
         }
@@ -123,7 +123,7 @@ public class AuthenticationService {
         var roles = new HashSet<Role>();
         roles.add(role);
 
-        // 1️⃣ Map DTO → entity
+        //1.Map DTO → entity
         Users user = userMapper.toRegisterUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(roles);
@@ -131,7 +131,7 @@ public class AuthenticationService {
         user.setEnabled(false); // mặc định chưa verify
         userRepository.save(user);
 
-        // 2️⃣ Tạo OTP 6 so dùng để xác thực email
+        //2.Tạo OTP 6 so dùng để xác thực email
         String otp = generateVerificationCode();
         VerificationToken token = new VerificationToken();
         token.setUser(user);
@@ -151,7 +151,6 @@ public class AuthenticationService {
 
         // Tạo OTP mới
         String otp = generateVerificationCode();
-        log.info("✅ OTP tạo ra: {}", otp);
         VerificationToken token = verificationTokenRepository.findByUser(user)
                 .orElse(new VerificationToken());
 
@@ -251,6 +250,7 @@ public class AuthenticationService {
                                 .plus(30, ChronoUnit.MINUTES)
                                 .toEpochMilli()
                 ))
+                .claim("userId", user.getUserId())
                 .claim("scope", buildScope(user))
                 .jwtID(UUID.randomUUID().toString())
                 .build();
@@ -284,38 +284,36 @@ public class AuthenticationService {
 
     @Transactional
     public void verifyEmail(String otp, String userName) {
-        // 1️⃣ Tìm user theo email
+        //1. Tìm user theo email
         Users user = userRepository.findByUsername(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        // 2️⃣ Lấy token (OTP) gắn với user
+        //2. Lấy token (OTP) gắn với user
         VerificationToken verificationToken = verificationTokenRepository
                 .findByUserAndVerificationCode(user, otp)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_OTP));
 
-        // 3️⃣ Kiểm tra OTP còn hạn không
+        //3. Kiểm tra OTP còn hạn không
         if (verificationToken.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())) {
             throw new AppException(ErrorCode.OTP_EXPIRED);
         }
 
-        // 4️⃣ Kiểm tra OTP đã bị vô hiệu chưa
+        // 4. Kiểm tra OTP đã bị vô hiệu chưa
         if (verificationToken.isInvalidated()) {
             throw new AppException(ErrorCode.INVALID_OTP);
         }
 
-        // 5️⃣ Xác thực thành công → enable user
+        //5. Xác thực thành công → enable user
         if (!user.isEnabled()) {
             user.setEnabled(true);
             userRepository.save(user);
         }
 
-        // 6️⃣ Vô hiệu hóa OTP sau khi dùng (đánh dấu chứ không xóa)
+        //6. Vô hiệu hóa OTP sau khi dùng (đánh dấu chứ không xóa)
         verificationToken.setInvalidated(true);
         verificationTokenRepository.save(verificationToken);
-        log.info("🔍 Đang xác thực OTP: {}, expires at: {}, now: {}",
-                otp, verificationToken.getVerificationCodeExpiresAt(), LocalDateTime.now());
 
-        // 7️⃣ (Tùy chọn) Xóa token cũ sau vài phút
+        //7. (Tùy chọn) Xóa token cũ sau vài phút
         // verificationTokenRepository.delete(verificationToken);
     }
 
@@ -378,7 +376,7 @@ public class AuthenticationService {
         List<Users> unverifiedUsers = userRepository.findAllByEnabledFalseAndCreatedAtBefore(cutoff);
 
         if (unverifiedUsers.isEmpty()) {
-            log.info("✅ No unverified users to delete.");
+            log.info("No unverified users to delete.");
             return;
         }
 
@@ -390,7 +388,7 @@ public class AuthenticationService {
                 userRepository.save(user);
                 userRepository.delete(user);
             } catch (Exception e) {
-                log.error("❌ Error deleting user {}: {}", user.getUsername(), e.getMessage());
+                log.error("Error deleting user {}: {}", user.getUsername(), e.getMessage());
             }
         }
     }

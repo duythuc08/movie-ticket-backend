@@ -16,14 +16,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SeatShowTimeResponse {
-    Long SeatShowTimeId;
+    Long seatShowTimeId;
 
     String userId;
 
     Long seatId;
     String seatRow;     // Ví dụ: "A"
     Integer seatNumber; // Ví dụ: 1
-    String seatName;    // Ví dụ: "A1" (Gộp ở mapper)
     String seatType;    // VIP/NORMAL
 
     Long showTimeId;

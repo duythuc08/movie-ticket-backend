@@ -26,7 +26,8 @@ public class OrderResponse {
     OrderStatus orderStatus;
     LocalDateTime bookingTime;    // Thời điểm người dùng đặt vé
     LocalDateTime expiredTime;    // Thời điểm hết hạn giữ vé (nếu chưa thanh toán)
-
+    LocalDateTime createdAt;      // Ngày tạo đơn hàng
+    LocalDateTime updatedAt;      // Ngày cập nhật cuối cùng
     String qrCode;
 
     List<OrderTicketResponse> tickets;

@@ -11,15 +11,17 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="order_ticket")
-@Data // Lombok: sinh getter, setter, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderTickets {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+    @EqualsAndHashCode.Include
     Long orderTicketId;
     @Column(nullable = false)
     BigDecimal price;
@@ -35,6 +37,6 @@ public class OrderTickets {
     Orders orders;
 
     @OneToOne
-    @JoinColumn(name = "seat_show_time_id",unique = true)
+    @JoinColumn(name = "seat_show_time_id",nullable = false)
     SeatShowTime seatShowTime;
 }

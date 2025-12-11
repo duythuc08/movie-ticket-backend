@@ -11,24 +11,27 @@ import java.util.Set;
 
 @Entity
 @Table(name="orders")
-@Data // Lombok: sinh getter, setter, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     Long orderId;  // ID đơn hàng (khóa chính, tự tăng)
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     Users users;  // Người dùng thực hiện đặt vé
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<OrderTickets> orderTickets;  // Danh sách vé trong đơn hàng
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<OrderFoods> orderFoods;  // Danh sách món ăn đi kèm (nếu có)
 
     BigDecimal totalTicketPrice;  // Tổng tiền vé

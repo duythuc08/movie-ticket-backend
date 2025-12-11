@@ -1,5 +1,6 @@
 package com.duythuc_dh52201541.moive_ticket_infinity_cinema.dto.respone;
 
+import com.duythuc_dh52201541.moive_ticket_infinity_cinema.enums.SeatType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,4 +18,5 @@ public class OrderTicketResponse {
     String movieName;
     String showTime;
     BigDecimal price;
+    SeatType seatType;
 }

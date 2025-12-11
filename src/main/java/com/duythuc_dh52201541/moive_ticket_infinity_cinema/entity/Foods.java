@@ -10,14 +10,17 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="food")
-@Data // Lombok: sinh getter, setter, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Foods {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     Long foodId;  // ID món ăn (khóa chính, tự tăng)
 
     String name;  // Tên món ăn / combo

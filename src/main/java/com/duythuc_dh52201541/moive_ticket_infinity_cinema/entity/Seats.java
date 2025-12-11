@@ -8,14 +8,17 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "seat")
-@Data // Lombok: sinh getter, setter, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
 @FieldDefaults(level = AccessLevel.PRIVATE) // Lombok: mặc định tất cả field là private
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Seats {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     Long seatId;
     String seatRow;
     Integer seatNumber;

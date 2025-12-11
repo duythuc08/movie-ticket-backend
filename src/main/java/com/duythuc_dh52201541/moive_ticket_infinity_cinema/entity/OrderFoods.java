@@ -8,7 +8,8 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="order_food")
-@Data // Lombok: sinh getter, setter, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Lombok: sinh constructor không tham số
 @AllArgsConstructor // Lombok: sinh constructor có tham số cho tất cả field
 @Builder // Lombok: hỗ trợ tạo object theo Builder pattern
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 public class OrderFoods {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     Long orderFoodId;  // ID chi tiết món ăn trong đơn hàng (khóa chính)
 
     Integer quantity;  // Số lượng món ăn được đặt

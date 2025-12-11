@@ -36,8 +36,8 @@ public class ShowTimeService {
     private final MovieRepository movieRepository;
     private final RoomRepository roomRepository;
     private final SeatShowTimeRepository seatShowTimeRepository;
-    @Transactional // QUAN TRỌNG: Đảm bảo tạo Showtime + Tạo Ghế thành công cùng lúc
 
+    @Transactional // QUAN TRỌNG: Đảm bảo tạo Showtime + Tạo Ghế thành công cùng lúc
     @PreAuthorize("hasRole('ADMIN')")
     public ShowTimeResponse createShowTime(ShowTimeRequest request) {
 
@@ -61,7 +61,7 @@ public class ShowTimeService {
         // Convert
         ShowTimes showTimes = showTimeMapper.toShowTimes(request);
 
-        // ❗ MUST SET — Mapper không set cho bạn
+        // MUST SET — Mapper không set cho bạn
         showTimes.setRooms(room);
         showTimes.setMovies(movie);
 

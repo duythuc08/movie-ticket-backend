@@ -48,9 +48,7 @@ public interface SeatShowTimeRepository extends JpaRepository<SeatShowTime, Stri
             "AND ss.seatShowTimeStatus IN ('SOLD', 'RESERVED', 'BLOCKED')")
     boolean existsAnyNotAvailable(@Param("ids") List<Long> ids);
 
-    // --- JOB QUÉT DỌN (CRON JOB) ---
-    // Tìm các ghế đang giữ chỗ (RESERVED) mà đã hết hạn giữ (locked_until < now)
-    // Để release lại thành AVAILABLE cho người khác mua
+
     List<SeatShowTime> findBySeatShowTimeStatusAndLockedUntilBefore(SeatShowTimeStatus status, LocalDateTime now);
 
     // (Optional) Xóa nhanh hoặc Reset status hàng loạt

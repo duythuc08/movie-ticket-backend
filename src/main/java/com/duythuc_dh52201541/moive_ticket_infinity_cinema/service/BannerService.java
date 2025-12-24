@@ -151,4 +151,12 @@ public class BannerService {
                 .map(bannerMapper :: toBannerResponse)
                 .toList();
     }
+
+    public BannerResponse getBannerByMovieId(Long movieId){
+        Banner banner = bannerRepository.findByMovies_MovieId(movieId);
+        if(banner == null){
+            throw new AppException(ErrorCode.BANNER_NOT_FOUND);
+        }
+        return bannerMapper.toBannerResponse(banner);
+    }
 }

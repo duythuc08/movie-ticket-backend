@@ -42,21 +42,21 @@ public class MovieService {
         }
         Movies movie = movieMapper.toMovies(request);
 
-        // ✅Convert genreNames -> Genre entities
+        // Convert genreNames -> Genre entities
         Set<Genre> genres = request.getGenreName().stream()
                 .map(name -> genreRepository.findByName(name)
                         .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_FOUND)))
                 .collect(Collectors.toSet());
         movie.setGenre(genres);
 
-        // ✅ Convert castIds -> Person entities
+        // Convert castIds -> Person entities
         Set<Person> castPersons = request.getCastIds().stream()
                 .map(id -> personRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCode.PERSON_NOT_FOUND)))
                 .collect(Collectors.toSet());
         movie.setCastPersons(castPersons);
 
-        // ✅ Convert directorIds -> Person entities
+        // Convert directorIds -> Person entities
         Set<Person> directors = request.getDirectorIds().stream()
                 .map(id -> personRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCode.PERSON_NOT_FOUND)))

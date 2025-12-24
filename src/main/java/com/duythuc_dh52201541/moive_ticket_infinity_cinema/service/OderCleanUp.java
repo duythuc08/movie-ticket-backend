@@ -21,25 +21,19 @@ public class OderCleanUp {
     @Scheduled(fixedRate = 60000) // Chạy mỗi phút 1 lần
     public void cleanupExpiredOrders() {
         try {
-            log.info("Starting cleanup of expired orders at {}", LocalDateTime.now());
-
             // Tìm các order PENDING đã quá thời gian hết hạn
             List<Orders> expiredOrders = orderRepo.findAllByOrderStatusAndExpiredTimeBefore(
                     OrderStatus.PENDING, LocalDateTime.now());
 
             if (expiredOrders.isEmpty()) {
-                log.debug("No expired orders found");
                 return;
             }
-
-            log.info("Found {} expired orders to clean up", expiredOrders. size());
 
             int successCount = 0;
             int failCount = 0;
 
             for (Orders order : expiredOrders) {
                 try {
-                    log.debug("Processing expired order:  {}", order.getOrderId());
                     paymentService.processFail(order); // Gọi logic nhả ghế
                     successCount++;
                 } catch (Exception e) {
@@ -49,8 +43,6 @@ public class OderCleanUp {
                     // Không throw exception để tiếp tục xử lý các orders khác
                 }
             }
-
-            log.info("Cleanup completed:  {} succeeded, {} failed", successCount, failCount);
 
         } catch (Exception e) {
             log.error("Error during cleanup process:  {}", e.getMessage(), e);

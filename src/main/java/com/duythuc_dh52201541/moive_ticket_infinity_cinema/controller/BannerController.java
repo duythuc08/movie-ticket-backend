@@ -53,4 +53,11 @@ public class BannerController {
                 .result(bannerService.getBannersByActive())
                 .build();
     }
+
+    @GetMapping("/getBannerByMovieId/{movieId}")
+    ApiResponse<BannerResponse> getBannerByMovieId(@PathVariable Long movieId) {
+        return ApiResponse.<BannerResponse>builder()
+                .result(bannerService.getBannerByMovieId(movieId))
+                .build();
+    }
 }

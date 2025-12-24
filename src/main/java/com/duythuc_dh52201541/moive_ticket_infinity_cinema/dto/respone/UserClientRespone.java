@@ -18,6 +18,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL) // Bỏ qua field null khi trả về JSON
 public class UserClientRespone {
 
+    String userId;
     String username; //su dung email
     String password;
     String firstname;

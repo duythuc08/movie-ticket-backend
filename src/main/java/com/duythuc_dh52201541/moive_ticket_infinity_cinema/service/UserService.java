@@ -106,21 +106,21 @@ public class UserService {
     // =================== UPDATE ===================
     @PreAuthorize("#userId == authentication.name or hasAuthority('ADMIN')")
     public UsersRespone updateUser(String userId, UserUpdateRequest request) {
-        // 1️⃣ Lấy user theo id từ DB (nếu không tồn tại thì ném exception USER_NOT_FOUND)
+        // 1️ Lấy user theo id từ DB (nếu không tồn tại thì ném exception USER_NOT_FOUND)
         Users newUser = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        // 2️⃣ Dùng mapper để cập nhật các field từ request -> user entity
+        // 2️ Dùng mapper để cập nhật các field từ request -> user entity
         userMapper.updateUser(newUser, request);
 
-        // 3️⃣ Mã hóa password mới từ request rồi set lại cho user
+        // 3 Mã hóa password mới từ request rồi set lại cho user
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        // 4️⃣ Lấy danh sách Role từ DB theo list id trong request
+        // 4️ Lấy danh sách Role từ DB theo list id trong request
         var roles = roleRepository.findAllById(request.getRoles());
         newUser.setRole(new HashSet<>(roles));
 
-        // 5️⃣ Lưu user đã update vào DB rồi map sang DTO trả về
+        // 5️ Lưu user đã update vào DB rồi map sang DTO trả về
         return userMapper.toUsersRespone(userRepository.save(newUser));
     }
 

@@ -12,6 +12,7 @@ public interface BannerRepository extends JpaRepository<Banner,String> {
 
     Optional<Banner> findById(Long id);
 
+    Banner findByMovies_MovieId(Long moviesMovieId);
     List<Banner> findAllByOrderByPriorityAsc(); //priority tăng dần
     List<Banner> findByActiveTrueOrderByPriorityAsc(); //Lấy tất cả banner đang active, sắp xếp theo priority
     List<Banner> findByBannerTypeOrderByPriorityAsc(BannerType bannerType);

@@ -23,7 +23,6 @@ public class Event {
     @Lob
     String description;
     String posterUrl;
-    String bannerUrl;
     LocalDateTime startTime;
     LocalDateTime endTime;
 

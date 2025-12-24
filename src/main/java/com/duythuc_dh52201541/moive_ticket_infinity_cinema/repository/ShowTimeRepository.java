@@ -29,7 +29,6 @@ public interface ShowTimeRepository extends JpaRepository<ShowTimes, String> {
     List<ShowTimes> findAllWithDetails();
 
 
-
     List<ShowTimes> findByMovies_MovieIdAndStartTimeBetween(Long movieId, LocalDateTime startTime, LocalDateTime endTime);
 
     // Cách viết Query thuần để tránh lỗi JPA naming convention (Recommended)

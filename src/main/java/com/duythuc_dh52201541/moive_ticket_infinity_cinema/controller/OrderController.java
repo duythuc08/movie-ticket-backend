@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/orders")
@@ -25,6 +27,13 @@ public class OrderController {
     public ApiResponse<OrderResponse> getOrder(@PathVariable Long orderId) {
         return ApiResponse.<OrderResponse>builder()
                 .result(orderService.getOrderById(orderId))
+                .build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<OrderResponse>> getOrderByUserId(@PathVariable String userId) {
+        return ApiResponse.<List<OrderResponse>>builder()
+                .result(orderService.getOrdersByUserId(userId))
                 .build();
     }
 }

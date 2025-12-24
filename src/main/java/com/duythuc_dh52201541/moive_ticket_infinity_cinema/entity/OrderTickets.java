@@ -38,5 +38,5 @@ public class OrderTickets {
 
     @ManyToOne(fetch = FetchType.LAZY) // Đổi thành ManyToOne
     @JoinColumn(name = "seat_show_time_id")
-    private SeatShowTime seatShowTime;
+    SeatShowTime seatShowTime;
 }
